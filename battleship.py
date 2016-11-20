@@ -1,41 +1,10 @@
-from random import randint
-
 # size of the board
-ROWS = 5
+from board import Board
+
+ROWS = 6
 COLS = 6
-
+SIZE = 3
 PLAYERS = 2
-
-
-class Board(object):
-    def __init__(self, rows, cols):
-        self.rows = rows
-        self.cols = cols
-        self.board = []
-        self.ship_row = -1
-        self.ship_col = -1
-        for i in range(self.rows):
-            self.board.append(["0"] * self.cols)
-
-    def __repr__(self):
-        grid = ""
-        for row in self.board:
-            grid += " ".join(row) + "\n"
-        return grid
-
-    def place_ship(self):
-        self.ship_row = randint(0, len(self.board)-1)
-        self.ship_col = randint(0, len(self.board[0])-1)
-
-    def guess(self, guess_row, guess_col):
-        if guess_row == self.ship_row and guess_col == self.ship_col:
-            return "Hit"
-        elif self.board[guess_row][guess_col] == "X":
-            return "Try again"
-        else:
-            self.board[guess_row][guess_col] = "X"
-            return "Miss"
-
 
 # Actual Game Starts Here
 # =======================
@@ -48,7 +17,7 @@ for i in range(PLAYERS):
 
 for b in player_boards:
     # place the ships
-    b.place_ship()
+    b.place_ship(SIZE)
 
 
 print("Let's play Battleship!")
@@ -68,11 +37,14 @@ while True:
         else:
             result = board_to_check.guess(guess_row, guess_col)
             if result == "Hit":
-                print("Congratulations! You sunk my battleship! Player {} wins!!!".format(whos_turn + 1))
-                exit()
+                print("You got a hit!")
+                break
             elif result == "Miss":
                 print("You missed my battleship!")
                 break
+            elif result == "Sunk":
+                print("You sunk my battleship. Player {}".format(whos_turn + 1))
+                exit()
             else:
                 print("You already guess that. Try Again")
 
